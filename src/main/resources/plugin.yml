@@ -1,0 +1,6 @@
+name: MobLifeIndicator
+version: '${version}'
+main: com.fornerzul.moblifeindicator.MobLifeIndicatorPlugin
+api-version: '26.2'
+author: forNerzul
+description: Shows a floating heart bar above damaged mobs.
