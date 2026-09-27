@@ -24,7 +24,7 @@ Players cannot see how much health a mob has left. The bar must only appear on d
 ## Tasks
 - [x] T1 Scaffold Gradle build (wrapper, paper-api, JUnit 5, plugin.yml, empty main class). Route: delegated (writer trigger: 2+ files).
 - [x] T2 `HeartBar` pure renderer (health/maxHealth -> hearts Component) with tests. Route: delegated.
-- [ ] T3 Damage listener + display tracker (show/refresh/hide timer, name preservation, PDC restore, death/disable cleanup). Route: delegated.
+- [x] T3 Damage listener + display tracker (show/refresh/hide timer, name preservation, PDC restore, death/disable cleanup). Route: delegated.
 - [ ] T4 README with build/deploy instructions. Route: delegated.
 
 ## Acceptance criteria
@@ -37,7 +37,8 @@ Strategy: ask-on-risk. Forecast: ~350 authored lines.
 
 ## Progress / Evidence
 - T1: Gradle scaffold (wrapper 9.7.1, paper-api 26.2.build.129-stable, JUnit 5, plugin.yml, empty JavaPlugin main class). `./gradlew build` green. Commit: 532953e (`build: scaffold paper plugin gradle project`).
-- T2: `HeartBar` pure renderer, TDD strict. RED observed (compile error: `cannot find symbol class HeartBar` before implementation existed). GREEN after implementation: 11/11 tests pass (`./gradlew test`), covering all cases from the spec (full/partial/very-low/fractional/zero health, >max clamp, 4-slot and 10-slot scaling, 5/5 split, zero and negative maxHealth). Commit: (recorded after commit below).
+- T2: `HeartBar` pure renderer, TDD strict. RED observed (compile error: `cannot find symbol class HeartBar` before implementation existed). GREEN after implementation: 11/11 tests pass (`./gradlew test`), covering all cases from the spec (full/partial/very-low/fractional/zero health, >max clamp, 4-slot and 10-slot scaling, 5/5 split, zero and negative maxHealth). Commit: 430d6a0 (`feat: add heart bar renderer`).
+- T3: `HealthDisplayTracker` (PDC-backed original name/visibility capture and restore, per-entity `EntityScheduler` hide timer at 100 ticks, crash-recovery restore, disable-time restore-all, name-tag rename fixup) + `DamageListener` (`EntityDamageEvent` at MONITOR computing post-hit health as `getHealth() - getFinalDamage()` rather than a next-tick read, to avoid a one-tick stale-health flash and an extra scheduled task per hit; `EntityRegainHealthEvent` refresh only if tracked; `EntityDeathEvent` restore before any MONITOR-priority observer of the death message; `PlayerInteractEntityEvent` + NAME_TAG capturing the renamed name one tick later; `EntityAddToWorldEvent` crash recovery). Verified by `./gradlew build` (compiles against the pinned paper-api and passes existing tests); no Bukkit mocking used per design note ("Tracker/listener logic that touches Bukkit is verified by compile"). Entity eligibility (`!Player && !ArmorStand`) kept as a small static method in the listener, per design note. Known limitation documented in README: renaming a tracked (bar-visible) mob with a name tag briefly shows the tag text instead of the bar until the next damage tick, though the *restored* name after hide/death is correctly the new tag name. Commit: (recorded after commit below).
 
 ## Next step
-T3.
+T4.

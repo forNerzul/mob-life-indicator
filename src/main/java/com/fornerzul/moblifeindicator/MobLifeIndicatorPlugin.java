@@ -11,13 +11,21 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public final class MobLifeIndicatorPlugin extends JavaPlugin {
 
+    private HealthDisplayTracker tracker;
+
     @Override
     public void onEnable() {
+        tracker = new HealthDisplayTracker(this);
+        HeartBar heartBar = new HeartBar();
+        getServer().getPluginManager().registerEvents(new DamageListener(this, tracker, heartBar), this);
         getLogger().info("MobLifeIndicator enabled.");
     }
 
     @Override
     public void onDisable() {
+        if (tracker != null) {
+            tracker.restoreAllTracked();
+        }
         getLogger().info("MobLifeIndicator disabled.");
     }
 }
