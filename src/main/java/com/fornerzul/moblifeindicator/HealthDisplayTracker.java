@@ -56,8 +56,10 @@ public final class HealthDisplayTracker {
     }
 
     /**
-     * Shows (or refreshes) the heart bar on the entity and (re)schedules the
-     * hide timer, cancelling any previous one.
+     * Shows the heart bar on the entity after a hit and (re)schedules the
+     * hide timer, cancelling any previous one. The bar hides 5 s after the
+     * last call to this method (i.e. the last damage), regardless of any
+     * {@link #refresh(LivingEntity, Component)} calls in between.
      */
     public void show(LivingEntity entity, Component hearts) {
         if (!isTracked(entity)) {
@@ -66,6 +68,19 @@ public final class HealthDisplayTracker {
         entity.customName(hearts);
         entity.setCustomNameVisible(true);
         scheduleHide(entity);
+    }
+
+    /**
+     * Updates the displayed hearts for a mob that is already tracked (e.g.
+     * on heal/regen) without touching the hide timer, which stays tied to
+     * the last damage. No-op if the mob isn't currently tracked.
+     */
+    public void refresh(LivingEntity entity, Component hearts) {
+        if (!isTracked(entity)) {
+            return;
+        }
+        entity.customName(hearts);
+        entity.setCustomNameVisible(true);
     }
 
     private void captureOriginal(LivingEntity entity) {

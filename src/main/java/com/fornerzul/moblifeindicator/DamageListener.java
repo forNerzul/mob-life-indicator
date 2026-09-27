@@ -63,7 +63,9 @@ public final class DamageListener implements Listener {
         }
         double max = maxHealth(living);
         double newHealth = Math.min(living.getHealth() + event.getAmount(), max);
-        tracker.show(living, heartBar.render(newHealth, max));
+        // refresh(), not show(): healing updates the displayed hearts but
+        // must not push back the hide timer, which stays tied to damage.
+        tracker.refresh(living, heartBar.render(newHealth, max));
     }
 
     @EventHandler
