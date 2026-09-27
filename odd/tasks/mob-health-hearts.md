@@ -23,7 +23,7 @@ Players cannot see how much health a mob has left. The bar must only appear on d
 
 ## Tasks
 - [x] T1 Scaffold Gradle build (wrapper, paper-api, JUnit 5, plugin.yml, empty main class). Route: delegated (writer trigger: 2+ files).
-- [ ] T2 `HeartBar` pure renderer (health/maxHealth -> hearts Component) with tests. Route: delegated.
+- [x] T2 `HeartBar` pure renderer (health/maxHealth -> hearts Component) with tests. Route: delegated.
 - [ ] T3 Damage listener + display tracker (show/refresh/hide timer, name preservation, PDC restore, death/disable cleanup). Route: delegated.
 - [ ] T4 README with build/deploy instructions. Route: delegated.
 
@@ -36,7 +36,8 @@ Players cannot see how much health a mob has left. The bar must only appear on d
 Strategy: ask-on-risk. Forecast: ~350 authored lines.
 
 ## Progress / Evidence
-- T1: Gradle scaffold (wrapper 9.7.1, paper-api 26.2.build.129-stable, JUnit 5, plugin.yml, empty JavaPlugin main class). `./gradlew build` green. Commit: (recorded below after commit).
+- T1: Gradle scaffold (wrapper 9.7.1, paper-api 26.2.build.129-stable, JUnit 5, plugin.yml, empty JavaPlugin main class). `./gradlew build` green. Commit: 532953e (`build: scaffold paper plugin gradle project`).
+- T2: `HeartBar` pure renderer, TDD strict. RED observed (compile error: `cannot find symbol class HeartBar` before implementation existed). GREEN after implementation: 11/11 tests pass (`./gradlew test`), covering all cases from the spec (full/partial/very-low/fractional/zero health, >max clamp, 4-slot and 10-slot scaling, 5/5 split, zero and negative maxHealth). Commit: (recorded after commit below).
 
 ## Next step
-T2.
+T3.
